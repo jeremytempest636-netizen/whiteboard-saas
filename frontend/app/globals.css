@@ -1,0 +1,162 @@
+@import "tailwindcss";
+
+/*
+ * Visual language: a physical whiteboard on a plaster wall.
+ * Surfaces are aluminium and board-white; colour only appears as marker ink.
+ */
+@theme {
+  --font-sans: "Familjen Grotesk Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-marker: "Caveat Brush", "Segoe Print", cursive;
+
+  --color-wall: #cfd5d1;
+  --color-wall-deep: #bcc4bf;
+  --color-board: #f5f6f3;
+  --color-ink: #1b1f23;
+  --color-ink-soft: #55606a;
+  --color-alu: #b4babf;
+  --color-alu-hi: #dde1e4;
+  --color-alu-lo: #8c9398;
+  --color-tray: #c3c9cd;
+
+  --color-m-black: #1b1f23;
+  --color-m-blue: #1f4fd8;
+  --color-m-red: #d93b30;
+  --color-m-green: #1e8a5a;
+  --color-m-orange: #e08a00;
+  --color-m-purple: #7a3fb5;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-wall);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 2px;
+}
+
+/* The board: surface plus an aluminium frame with a bevel. */
+.board-frame {
+  position: relative;
+  border-radius: 10px;
+  padding: 10px;
+  background: linear-gradient(145deg, var(--color-alu-hi), var(--color-alu) 45%, var(--color-alu-lo));
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.55) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.18) inset,
+    0 18px 40px -18px rgba(27, 31, 35, 0.55),
+    0 2px 6px rgba(27, 31, 35, 0.25);
+}
+
+.board-surface {
+  position: relative;
+  overflow: hidden;
+  border-radius: 3px;
+  background-color: var(--color-board);
+  box-shadow: 0 0 0 1px rgba(27, 31, 35, 0.18) inset, 0 2px 8px rgba(27, 31, 35, 0.18) inset;
+  touch-action: none;
+}
+
+/* The marker tray that holds tools and markers. */
+.tray {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  padding: 8px 10px 8px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, var(--color-alu-hi), var(--color-tray) 55%, #b2b9bd);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.7) inset,
+    0 -2px 0 rgba(27, 31, 35, 0.14) inset,
+    0 14px 24px -12px rgba(27, 31, 35, 0.6),
+    0 2px 4px rgba(27, 31, 35, 0.25);
+}
+
+.tray-divider {
+  display: none;
+  align-self: stretch;
+  width: 1px;
+  margin: 4px 4px;
+  background: rgba(27, 31, 35, 0.2);
+  box-shadow: 1px 0 0 rgba(255, 255, 255, 0.55);
+}
+
+@media (min-width: 1024px) {
+  .tray-divider {
+    display: block;
+  }
+}
+
+.tool-btn {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 9px;
+  border: 0;
+  color: var(--color-ink);
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 120ms, box-shadow 120ms;
+}
+.tool-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.45);
+}
+.tool-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.tool-btn[aria-pressed="true"] {
+  background: var(--color-board);
+  box-shadow:
+    0 0 0 1px rgba(27, 31, 35, 0.35),
+    0 2px 0 rgba(27, 31, 35, 0.25);
+}
+
+/* A marker lying in the tray; the chosen one is lifted out. */
+.marker {
+  position: relative;
+  display: block;
+  width: 26px;
+  height: 52px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  transition: transform 160ms cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+.marker[aria-pressed="true"] {
+  transform: translateY(-9px);
+}
+.marker:hover:not([aria-pressed="true"]) {
+  transform: translateY(-3px);
+}
+
+.pill {
+  border-radius: 999px;
+  background: var(--color-board);
+  box-shadow: 0 0 0 1px rgba(27, 31, 35, 0.2), 0 1px 0 rgba(27, 31, 35, 0.12);
+}
+
+.handwritten {
+  font-family: var(--font-marker);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marker,
+  .tool-btn {
+    transition: none;
+  }
+}
